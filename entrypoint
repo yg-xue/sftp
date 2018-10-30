@@ -87,20 +87,19 @@ function createUser() {
         usermod -p "*" $user # disabled password
     fi
 
-    # Add SSH keys to authorized_keys with valid permissions
-    if [ -d /home/$user/.ssh/keys ]; then
-        for publickey in /home/$user/.ssh/keys/*; do
-            cat $publickey >> /home/$user/.ssh/authorized_keys
-        done
-        chown $uid /home/$user/.ssh/authorized_keys
-        chmod 600 /home/$user/.ssh/authorized_keys
-    fi
+	mkdir -p /home/$user/.ssh
+	touch /home/$user/.ssh/authorized_keys
+	cat /tests/keys/id_rsa.pub >> /home/$user/.ssh/authorized_keys
+	chown $uid /home/$user/.ssh/authorized_keys
+	chmod 600 /home/$user/.ssh/authorized_keys
 	
 	# Create folder for sftp test
-	mkdir -p /home/$user/in /home/$user/out /home/$user/out_empty /home/$user/out_not_empty
+	mkdir -p /home/$user/in /home/$user/out /home/$user/out_empty /home/$user/out_not_empty /home/$user/cmdTest
 	cp /tests/out_not_empty/* /home/$user/out_not_empty/
-	chown $user /home/$user/in /home/$user/out /home/$user/out_empty /home/$user/out_not_empty
-	chmod 777 /home/$user/in /home/$user/out /home/$user/out_empty /home/$user/out_not_empty
+	chown $user /home/$user/in /home/$user/out /home/$user/out_empty /home/$user/out_not_empty /home/$user/cmdTest
+	chmod 777 /home/$user/in /home/$user/out /home/$user/out_empty /home/$user/out_not_empty /home/$user/cmdTest
+	
+	usermod -aG ssh $user
 
     # Make sure dirs exists
     if [ -n "$dir" ]; then
