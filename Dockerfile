@@ -8,8 +8,7 @@ MAINTAINER zafin
 RUN apt-get update && \
     apt-get -y install openssh-server vim && \
     rm -rf /var/lib/apt/lists/* && \
-    mkdir -p /var/run/sshd && \
-    rm -f /etc/ssh/ssh_host_*key*
+    mkdir -p /var/run/sshd
 
 COPY sshd_config /etc/ssh/sshd_config
 COPY entrypoint /
